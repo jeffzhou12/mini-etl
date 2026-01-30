@@ -1,0 +1,296 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ETL平台API",
+    "version": "1.0.0",
+    "description": "ETL平台关键API设计（仅设计文档）"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com"
+    }
+  ],
+  "paths": {
+    "/datasources": {
+      "get": {
+        "summary": "查询数据源列表",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DataSource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "创建数据源",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataSourceCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "已创建"
+          }
+        }
+      }
+    },
+    "/jobs": {
+      "get": {
+        "summary": "查询任务列表",
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      },
+      "post": {
+        "summary": "创建ETL任务",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ETLJobCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "已创建"
+          }
+        }
+      }
+    },
+    "/jobs/{jobId}/run": {
+      "post": {
+        "summary": "手动触发任务执行",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "已提交执行"
+          }
+        }
+      }
+    },
+    "/scripts": {
+      "post": {
+        "summary": "上传/更新清洗脚本",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransformScript"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    },
+    "/targets": {
+      "post": {
+        "summary": "创建下游目标",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TargetSink"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "已创建"
+          }
+        }
+      }
+    },
+    "/results/subscribe": {
+      "post": {
+        "summary": "创建结果订阅（API）",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultSubscription"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "已创建"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DataSource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Database",
+              "Api",
+              "File"
+            ]
+          },
+          "connectionConfig": {
+            "type": "object"
+          },
+          "apiConfig": {
+            "type": "object"
+          }
+        }
+      },
+      "DataSourceCreate": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DataSource"
+          }
+        ]
+      },
+      "ETLJobCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "schedule": {
+            "type": "string",
+            "description": "Cron表达式"
+          },
+          "dataSourceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fieldMappings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FieldMapping"
+            }
+          },
+          "scriptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "FieldMapping": {
+        "type": "object",
+        "properties": {
+          "sourceField": {
+            "type": "string"
+          },
+          "targetField": {
+            "type": "string"
+          },
+          "defaultValue": {
+            "type": "string"
+          }
+        }
+      },
+      "TransformScript": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "language": {
+            "type": "string",
+            "enum": [
+              "Python",
+              "JavaScript",
+              "CSharp",
+              "Java"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "TargetSink": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Database",
+              "ApiSubscriber"
+            ]
+          },
+          "config": {
+            "type": "object"
+          }
+        }
+      },
+      "ResultSubscription": {
+        "type": "object",
+        "properties": {
+          "callbackUrl": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
