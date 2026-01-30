@@ -156,6 +156,254 @@
           }
         }
       }
+    },
+    "/executions": {
+      "get": {
+        "summary": "查询执行记录列表",
+        "description": "获取任务执行记录列表，支持分页和过滤",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "query",
+            "description": "按任务ID过滤",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "按状态过滤",
+            "schema": {
+              "type": "string",
+              "enum": ["Pending", "Running", "Success", "Failed", "Cancelled"]
+            }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "description": "开始时间范围（起始）",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "description": "开始时间范围（结束）",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "页码（从1开始）",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每页记录数",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "description": "总记录数"
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "pageSize": {
+                      "type": "integer"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/JobExecutionLog"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/executions/{executionId}": {
+      "get": {
+        "summary": "获取执行记录详情",
+        "description": "根据执行ID获取单个执行记录的详细信息",
+        "parameters": [
+          {
+            "name": "executionId",
+            "in": "path",
+            "required": true,
+            "description": "执行记录ID",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobExecutionLog"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "执行记录不存在"
+          }
+        }
+      }
+    },
+    "/executions/{executionId}/cancel": {
+      "post": {
+        "summary": "取消执行中的任务",
+        "description": "取消正在执行的任务",
+        "parameters": [
+          {
+            "name": "executionId",
+            "in": "path",
+            "required": true,
+            "description": "执行记录ID",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取消成功"
+          },
+          "400": {
+            "description": "任务不在执行中，无法取消"
+          },
+          "404": {
+            "description": "执行记录不存在"
+          }
+        }
+      }
+    },
+    "/jobs/{jobId}/executions": {
+      "get": {
+        "summary": "查询指定任务的执行历史",
+        "description": "获取某个ETL任务的所有执行记录",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "description": "任务ID",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "返回记录数限制",
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JobExecutionLog"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在"
+          }
+        }
+      }
+    },
+    "/executions/statistics": {
+      "get": {
+        "summary": "获取执行统计信息",
+        "description": "获取任务执行的统计数据（成功率、平均耗时等）",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "query",
+            "description": "指定任务ID（可选）",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "统计开始日期",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "统计结束日期",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionStatistics"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -288,6 +536,192 @@
           },
           "secret": {
             "type": "string"
+          }
+        }
+      },
+      "JobExecutionLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "执行记录唯一标识"
+          },
+          "jobId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "关联的ETL任务ID"
+          },
+          "jobName": {
+            "type": "string",
+            "description": "任务名称快照"
+          },
+          "triggerType": {
+            "type": "string",
+            "enum": ["Scheduled", "Manual", "API"],
+            "description": "触发方式"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Pending", "Running", "Success", "Failed", "Cancelled"],
+            "description": "执行状态"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "开始执行时间"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "结束时间（执行中时为null）"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int64",
+            "description": "执行耗时（毫秒）"
+          },
+          "currentStage": {
+            "type": "string",
+            "enum": ["Extract", "Transform", "Load", "Complete"],
+            "description": "当前执行阶段"
+          },
+          "progress": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "执行进度百分比"
+          },
+          "sourceRecordCount": {
+            "type": "integer",
+            "description": "源数据记录数"
+          },
+          "processedCount": {
+            "type": "integer",
+            "description": "已处理记录数"
+          },
+          "successCount": {
+            "type": "integer",
+            "description": "成功写入记录数"
+          },
+          "failedCount": {
+            "type": "integer",
+            "description": "失败记录数"
+          },
+          "skippedCount": {
+            "type": "integer",
+            "description": "跳过记录数"
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true,
+            "description": "错误信息"
+          },
+          "errorStackTrace": {
+            "type": "string",
+            "nullable": true,
+            "description": "异常堆栈信息"
+          },
+          "executionDetails": {
+            "type": "object",
+            "description": "详细执行信息",
+            "properties": {
+              "stages": {
+                "type": "object",
+                "properties": {
+                  "extract": {
+                    "$ref": "#/components/schemas/StageDetail"
+                  },
+                  "transform": {
+                    "$ref": "#/components/schemas/StageDetail"
+                  },
+                  "load": {
+                    "$ref": "#/components/schemas/StageDetail"
+                  }
+                }
+              },
+              "dataSourceSnapshot": {
+                "type": "object",
+                "description": "数据源配置快照"
+              },
+              "targetSinkSnapshot": {
+                "type": "object",
+                "description": "目标配置快照"
+              }
+            }
+          },
+          "triggeredBy": {
+            "type": "string",
+            "description": "触发人/系统标识"
+          },
+          "serverHost": {
+            "type": "string",
+            "description": "执行服务器地址"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录创建时间"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "记录最后更新时间"
+          }
+        }
+      },
+      "StageDetail": {
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "integer",
+            "description": "阶段耗时（毫秒）"
+          },
+          "recordCount": {
+            "type": "integer",
+            "description": "处理记录数"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "完成时间"
+          }
+        }
+      },
+      "ExecutionStatistics": {
+        "type": "object",
+        "properties": {
+          "totalExecutions": {
+            "type": "integer",
+            "description": "总执行次数"
+          },
+          "successCount": {
+            "type": "integer",
+            "description": "成功次数"
+          },
+          "failedCount": {
+            "type": "integer",
+            "description": "失败次数"
+          },
+          "successRate": {
+            "type": "number",
+            "format": "float",
+            "description": "成功率（0-1）"
+          },
+          "averageDuration": {
+            "type": "integer",
+            "description": "平均耗时（毫秒）"
+          },
+          "totalRecordsProcessed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "总处理记录数"
+          },
+          "lastExecutionTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "最后执行时间"
           }
         }
       }
