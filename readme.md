@@ -152,12 +152,21 @@ hediet.vscode-drawio
 
 ## 3. 关键 API 设计
 
-openapi 源文件: **[etl_openapi.json](./etl_openapi.json)**
+### 🌐 API 文档预览方式
 
-**在线查看**（无需配置）：
+**OpenAPI 源文件**: [etl_openapi.json](./etl_openapi.json)
 
-[![Open in Redoc](https://img.shields.io/badge/Open%20in-Redoc-8A2BE2?style=flat-square&logo=redoc)](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json)
+---
 
+#### 在线预览
+
+**Swagger Editor**（推荐 - 可交互）：
+
+[![Open in Swagger Editor](https://img.shields.io/badge/Swagger%20Editor-85EA2D?style=for-the-badge&logo=swagger&logoColor=white)](https://editor.swagger.io/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json)
+
+**Redoc**（美观的文档展示）：
+
+[![Open in Redoc](https://img.shields.io/badge/Redoc-8A2BE2?style=for-the-badge&logo=redoc)](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json)
 
 
 
