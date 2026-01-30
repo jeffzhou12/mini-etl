@@ -2,21 +2,78 @@
 
 本文件汇总了模型设计、流程图、关键 API、分层架构、脚本引擎与 DSL 设计。
 
-## 1. 模型设计（Excel）
+## 1. 模型设计
 
-- 文件：`etl_model_design.xlsx`
+### 📊 在线预览（Markdown 版本）
 
-- 说明：包含数据源、字段映射、任务、脚本、下游目标等核心模型字段定义。
+查看 **[etl_model_design.md](./etl_model_design.md)** - 已转换为 Markdown 表格，GitHub 原生支持预览 ✅
 
-## 2. 流程图设计（Drawio）
+<details>
+<summary>📋 点击展开模型定义表格</summary>
 
-- 文件：`etl_flow.drawio`
+| 模块 | 模型 | 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- | --- | --- |
+| 数据源 | DataSource | Id | Guid | 是 | 数据源唯一标识 |
+| 数据源 | DataSource | Name | string | 是 | 数据源名称 |
+| 数据源 | DataSource | Type | enum(DataSourceType) | 是 | 数据库/API/文件等类型 |
+| 数据源 | DataSource | ConnectionConfig | json | 否 | 连接信息，包含连接串、凭证等 |
+| 数据源 | DataSource | ApiConfig | json | 否 | API读取配置（URL、Header、Method等） |
+| 数据源 | DataSource | FilePath | string | 否 | 文件路径，可以是一个json或者xml文件上传到服务器或者对象存储端 |
+| 映射 | FieldMapping | Id | Guid | 是 | 映射唯一标识 |
+| 映射 | FieldMapping | SourceField | string | 是 | 上游字段名 |
+| 映射 | FieldMapping | TargetField | string | 是 | 下游字段名 |
+| 任务 | ETLJob | Id | Guid | 是 | 任务唯一标识 |
+| 任务 | ETLJob | Name | string | 是 | 任务名称 |
+| 任务 | ETLJob | Schedule | string(Cron) | 否 | 执行频率（Cron 表达式） |
+| 任务 | ETLJob | ManualTrigger | bool | 否 | 是否支持手动触发 |
+| 脚本 | TransformScript | Id | Guid | 是 | 脚本唯一标识 |
+| 脚本 | TransformScript | Language | enum(ScriptLanguage) | 是 | 脚本语言：Python/JS/C#/Java |
+| 脚本 | TransformScript | Content | string | 是 | 脚本内容 |
+| 目标 | TargetSink | Id | Guid | 是 | 下游目标唯一标识 |
+| 目标 | TargetSink | Type | enum(TargetType) | 是 | 数据库/API订阅 |
+| 目标 | TargetSink | Config | json | 否 | 下游连接配置，可以是API或者数据库连接地址 |
 
-- 说明：覆盖触发器、采集、映射、脚本清洗、下游写入与审计日志。
+</details>
 
-## 3. 关键 API 设计（OpenAPI JSON）
+### 📥 原始文件
 
-- 文件：`etl_openapi.json`
+- Excel 文件：[etl_model_design.xlsx](./etl_model_design.xlsx)（需下载查看）
+
+## 2. 流程图设计
+
+### 🎨 在线预览
+
+**当前状态**：Drawio 源文件 - [etl_flow.drawio](./etl_flow.drawio)
+
+> 📌 **如何导出为图片以便在 GitHub 中预览：**
+> 
+> 请查看 **[导出说明](./EXPORT_DRAWIO.md)** 了解如何将 Drawio 文件导出为 PNG/SVG 图片。
+> 
+> **快速步骤**：
+> 1. 安装推荐扩展（见下方）
+> 2. 打开 `etl_flow.drawio` 文件
+> 3. 导出为 SVG/PNG 格式
+> 4. 提交图片文件到仓库
+
+```vscode-extensions
+hediet.vscode-drawio
+```
+
+### 📝 说明
+
+覆盖触发器、采集、映射、脚本清洗、下游写入与审计日志的完整 ETL 流程。
+
+## 3. 关键 API 设计
+
+### 🌐 在线预览（OpenAPI JSON）
+
+查看 **[etl_openapi.json](./etl_openapi.json)** ✅ GitHub 原生支持在线预览
+
+> 💡 **提示**：点击链接后，GitHub 会自动格式化显示 JSON 内容，支持语法高亮和折叠。
+
+### 📄 说明
+
+定义了 ETL 平台的核心 API 接口，包括数据源管理、任务配置、脚本执行等关键操作。
 
 ## 4. C# 分层架构草案（API / Service / Engine / Script Sandbox）
 
