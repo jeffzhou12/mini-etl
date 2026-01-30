@@ -70,7 +70,7 @@
 <tr><td>TargetSinkId</td><td>Guid</td><td>是</td><td>关联下游目标ID</td></tr>
 <tr><td>ScriptId</td><td>Guid</td><td>否</td><td>关联清洗脚本ID（可选）</td></tr>
 <tr><td>FieldMappings</td><td>json/array</td><td>否</td><td>字段映射列表（或引用映射配置ID）</td></tr>
-<tr><td>DSL</td><td>json</td><td>是</td><td>任务执行内容，这里会关联上下游配置，脚本配置，字段映射等</td></tr>
+<tr><td>DSL</td><td>json</td><td>否</td><td>任务执行内容，这里会关联上下游配置，脚本配置，字段映射等</td></tr>
 </tbody>
 </table>
 
@@ -152,9 +152,14 @@ hediet.vscode-drawio
 
 ## 3. 关键 API 设计
 
-### 🌐 在线预览方式 GitHub Pages 在线访问：
+openapi 源文件: **[etl_openapi.json](./etl_openapi.json)**
 
-[![View on GitHub Pages](https://img.shields.io/badge/Swagger%20UI-GitHub%20Pages-blue?style=for-the-badge&logo=github)](https://jeffzhou12.github.io/mini-etl/swagger-ui.html)
+**在线查看**（无需配置）：
+
+[![Open in Redoc](https://img.shields.io/badge/Open%20in-Redoc-8A2BE2?style=flat-square&logo=redoc)](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json)
+
+
+
 
 ### 📄 说明
 
@@ -190,7 +195,127 @@ ETL.Platform
    └─ Logging             // 日志与审计
 ```
 
-## 5. 脚本执行引擎设计（Roslyn / JS / Java Process）
+## 5. 脚本内容约定 (TransformScript.Content)
+
+### 📋 统一约定
+
+所有语言的脚本都必须遵循以下约定：
+
+1. **输入参数**：脚本接收一个名为 `input` 的参数，类型为数组/列表，每个元素是一个字典/对象
+2. **输出结果**：脚本必须返回处理后的数组/列表，结构与输入相同
+3. **入口函数**：定义一个名为 `transform` 的函数作为入口点
+4. **数据结构**：每条记录是 `key-value` 结构，key 为字段名，value 为字段值
+
+### 💻 各语言示例
+
+#### Python 脚本示例
+
+```python
+def transform(input):
+    """
+    数据转换函数
+    :param input: 输入数据列表，每个元素是字典 [{"field1": "value1", ...}, ...]
+    :return: 转换后的数据列表
+    """
+    output = []
+    
+    for row in input:
+        # 数据清洗：去除空格
+        if "name" in row:
+            row["name"] = row["name"].strip()
+        
+        # 数据转换：类型转换
+        if "age" in row:
+            row["age"] = int(row["age"])
+        
+        # 数据过滤：跳过无效记录
+        if row.get("age", 0) > 0:
+            # 数据增强：添加新字段
+            row["processed_at"] = "2026-01-30"
+            output.append(row)
+    
+    return output
+```
+
+#### JavaScript 脚本示例
+
+```javascript
+function transform(input) {
+    /**
+     * 数据转换函数
+     * @param {Array} input - 输入数据数组，每个元素是对象 [{field1: "value1", ...}, ...]
+     * @return {Array} 转换后的数据数组
+     */
+    const output = [];
+    
+    for (const row of input) {
+        // 数据清洗：去除空格
+        if (row.name) {
+            row.name = row.name.trim();
+        }
+        
+        // 数据转换：类型转换
+        if (row.age) {
+            row.age = parseInt(row.age);
+        }
+        
+        // 数据过滤：跳过无效记录
+        if (row.age > 0) {
+            // 数据增强：添加新字段
+            row.processed_at = "2026-01-30";
+            output.push(row);
+        }
+    }
+    
+    return output;
+}
+```
+
+#### C# 脚本示例
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public List<Dictionary<string, object>> Transform(List<Dictionary<string, object>> input)
+{
+    /// <summary>
+    /// 数据转换函数
+    /// </summary>
+    /// <param name="input">输入数据列表，每个元素是字典</param>
+    /// <returns>转换后的数据列表</returns>
+    
+    var output = new List<Dictionary<string, object>>();
+    
+    foreach (var row in input)
+    {
+        // 数据清洗：去除空格
+        if (row.ContainsKey("name") && row["name"] is string name)
+        {
+            row["name"] = name.Trim();
+        }
+        
+        // 数据转换：类型转换
+        if (row.ContainsKey("age"))
+        {
+            row["age"] = Convert.ToInt32(row["age"]);
+        }
+        
+        // 数据过滤：跳过无效记录
+        if (row.ContainsKey("age") && (int)row["age"] > 0)
+        {
+            // 数据增强：添加新字段
+            row["processed_at"] = "2026-01-30";
+            output.Add(row);
+        }
+    }
+    
+    return output;
+}
+```
+
+## 6. 脚本执行引擎设计（Roslyn / JS / Java Process）
 
 ```csharp
 // 脚本执行统一接口，所有语言实现此接口
@@ -259,7 +384,7 @@ public class JavaExecutor : IScriptExecutor
 }
 ```
 
-## 6. 数据流编排 DSL 设计 (可选)
+## 7. 数据流编排 DSL 设计 (可选)
 
 ### 6.1 DSL 示例
 
