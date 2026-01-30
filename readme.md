@@ -200,13 +200,13 @@ hediet.vscode-drawio
 
 **Swagger Editor**（推荐 - 可交互）：
 
-<a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json" target="_blank">
+<a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/refs/heads/main/etl_openapi.json" target="_blank">
   <img src="https://img.shields.io/badge/Swagger%20Editor-85EA2D?style=for-the-badge&logo=swagger&logoColor=white" alt="Open in Swagger Editor">
 </a>
 
 **Redoc**（美观的文档展示）：
 
-<a href="https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json" target="_blank">
+<a href="https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/refs/heads/main/etl_openapi.json" target="_blank">
   <img src="https://img.shields.io/badge/Redoc-8A2BE2?style=for-the-badge&logo=redoc" alt="Open in Redoc">
 </a>
 
