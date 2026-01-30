@@ -6,37 +6,109 @@
 
 ### 📊 在线预览（Markdown 版本）
 
-查看 **[etl_model_design.md](./etl_model_design.md)** - 已转换为 Markdown 表格，GitHub 原生支持预览 ✅
+查看 **[etl_model_design.md](./etl_model_design.md)**
 
-<details>
+<details open>
 <summary>📋 点击展开模型定义表格</summary>
 
-| 模块 | 模型 | 字段 | 类型 | 必填 | 说明 |
-| --- | --- | --- | --- | --- | --- |
-| 数据源 | DataSource | Id | Guid | 是 | 数据源唯一标识 |
-| 数据源 | DataSource | Name | string | 是 | 数据源名称 |
-| 数据源 | DataSource | Type | enum(DataSourceType) | 是 | 数据库/API/文件等类型 |
-| 数据源 | DataSource | ConnectionConfig | json | 否 | 连接信息，包含连接串、凭证等 |
-| 数据源 | DataSource | ApiConfig | json | 否 | API读取配置（URL、Header、Method等） |
-| 数据源 | DataSource | FilePath | string | 否 | 文件路径，可以是一个json或者xml文件上传到服务器或者对象存储端 |
-| 映射 | FieldMapping | Id | Guid | 是 | 映射唯一标识 |
-| 映射 | FieldMapping | SourceField | string | 是 | 上游字段名 |
-| 映射 | FieldMapping | TargetField | string | 是 | 下游字段名 |
-| 任务 | ETLJob | Id | Guid | 是 | 任务唯一标识 |
-| 任务 | ETLJob | Name | string | 是 | 任务名称 |
-| 任务 | ETLJob | Schedule | string(Cron) | 否 | 执行频率（Cron 表达式） |
-| 任务 | ETLJob | ManualTrigger | bool | 否 | 是否支持手动触发 |
-| 任务 | ETLJob | DataSourceId | Guid | 是 | 关联上游数据源ID |
-| 任务 | ETLJob | TargetSinkId | Guid | 是 | 关联下游目标ID |
-| 任务 | ETLJob | ScriptId | Guid | 否 | 关联清洗脚本ID（可选） |
-| 任务 | ETLJob | FieldMappings | json/array | 否 | 字段映射列表（或引用映射配置ID） |
-| 任务 | ETLJob | DSL | json | 是 | 任务执行内容，这里会关联上下游配置，脚本配置，字段映射等 |
-| 脚本 | TransformScript | Id | Guid | 是 | 脚本唯一标识 |
-| 脚本 | TransformScript | Language | enum(ScriptLanguage) | 是 | 脚本语言：Python/JS/C#/Java |
-| 脚本 | TransformScript | Content | string | 是 | 脚本内容 |
-| 目标 | TargetSink | Id | Guid | 是 | 下游目标唯一标识 |
-| 目标 | TargetSink | Type | enum(TargetType) | 是 | 数据库/API订阅 |
-| 目标 | TargetSink | Config | json | 否 | 下游连接配置，可以是API或者数据库连接地址 |
+#### 📦 数据源模型 (DataSource)
+
+<table border="1" cellpadding="8" cellspacing="0">
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Id</td><td>Guid</td><td>是</td><td>数据源唯一标识</td></tr>
+<tr><td>Name</td><td>string</td><td>是</td><td>数据源名称</td></tr>
+<tr><td>Type</td><td>enum(DataSourceType)</td><td>是</td><td>数据库/API/文件等类型</td></tr>
+<tr><td>ConnectionConfig</td><td>json</td><td>否</td><td>连接信息，包含连接串、凭证等</td></tr>
+<tr><td>ApiConfig</td><td>json</td><td>否</td><td>API读取配置（URL、Header、Method等）</td></tr>
+<tr><td>FilePath</td><td>string</td><td>否</td><td>文件路径，可以是一个json或者xml文件上传到服务器或者对象存储端</td></tr>
+</tbody>
+</table>
+
+#### 🔗 字段映射模型 (FieldMapping)
+
+<table border="1" cellpadding="8" cellspacing="0">
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Id</td><td>Guid</td><td>是</td><td>映射唯一标识</td></tr>
+<tr><td>SourceField</td><td>string</td><td>是</td><td>上游字段名</td></tr>
+<tr><td>TargetField</td><td>string</td><td>是</td><td>下游字段名</td></tr>
+</tbody>
+</table>
+
+#### ⚙️ 任务模型 (ETLJob)
+
+<table border="1" cellpadding="8" cellspacing="0">
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Id</td><td>Guid</td><td>是</td><td>任务唯一标识</td></tr>
+<tr><td>Name</td><td>string</td><td>是</td><td>任务名称</td></tr>
+<tr><td>Schedule</td><td>string(Cron)</td><td>否</td><td>执行频率（Cron 表达式）</td></tr>
+<tr><td>ManualTrigger</td><td>bool</td><td>否</td><td>是否支持手动触发</td></tr>
+<tr><td>DataSourceId</td><td>Guid</td><td>是</td><td>关联上游数据源ID</td></tr>
+<tr><td>TargetSinkId</td><td>Guid</td><td>是</td><td>关联下游目标ID</td></tr>
+<tr><td>ScriptId</td><td>Guid</td><td>否</td><td>关联清洗脚本ID（可选）</td></tr>
+<tr><td>FieldMappings</td><td>json/array</td><td>否</td><td>字段映射列表（或引用映射配置ID）</td></tr>
+<tr><td>DSL</td><td>json</td><td>是</td><td>任务执行内容，这里会关联上下游配置，脚本配置，字段映射等</td></tr>
+</tbody>
+</table>
+
+#### 📝 脚本模型 (TransformScript)
+
+<table border="1" cellpadding="8" cellspacing="0">
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Id</td><td>Guid</td><td>是</td><td>脚本唯一标识</td></tr>
+<tr><td>Language</td><td>enum(ScriptLanguage)</td><td>是</td><td>脚本语言：Python/JS/C#/Java</td></tr>
+<tr><td>Content</td><td>string</td><td>是</td><td>脚本内容</td></tr>
+</tbody>
+</table>
+
+#### 🎯 下游目标模型 (TargetSink)
+
+<table border="1" cellpadding="8" cellspacing="0">
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Id</td><td>Guid</td><td>是</td><td>下游目标唯一标识</td></tr>
+<tr><td>Type</td><td>enum(TargetType)</td><td>是</td><td>数据库/API订阅</td></tr>
+<tr><td>Config</td><td>json</td><td>否</td><td>下游连接配置，可以是API或者数据库连接地址</td></tr>
+</tbody>
+</table>
 
 </details>
 
@@ -46,52 +118,48 @@
 
 ## 2. 流程图设计
 
-### 🎨 在线预览
+### 🎨 ETL 流程图
 
-**当前状态**：Drawio 源文件 - [etl_flow.drawio](./etl_flow.drawio)
-
-> 📌 **如何导出为图片以便在 GitHub 中预览：**
-> 
-> 请查看 **[导出说明](./EXPORT_DRAWIO.md)** 了解如何将 Drawio 文件导出为 PNG/SVG 图片。
-> 
-> **快速步骤**：
-> 1. 安装推荐扩展（见下方）
-> 2. 打开 `etl_flow.drawio` 文件
-> 3. 导出为 SVG/PNG 格式
-> 4. 提交图片文件到仓库
-
-```vscode-extensions
-hediet.vscode-drawio
-```
+![ETL 流程图](./etl_flow.drawio.png)
 
 ### 📝 说明
 
 覆盖触发器、采集、映射、脚本清洗、下游写入与审计日志的完整 ETL 流程。
 
+### 📂 源文件
+
+- **Drawio 源文件**: [etl_flow.drawio](./etl_flow.drawio) - 可使用 Draw.io 编辑
+- **导出图片**: [etl_flow.drawio.png](./etl_flow.drawio.png)
+
+<details>
+<summary>💡 如何编辑流程图</summary>
+
+**推荐安装 Draw.io 扩展**：
+
+```vscode-extensions
+hediet.vscode-drawio
+```
+
+**编辑步骤**：
+1. 安装上方推荐的扩展
+2. 在 VS Code 中打开 `etl_flow.drawio` 文件
+3. 编辑完成后，导出为 PNG/SVG 格式
+4. 提交更新后的图片到仓库
+
+查看 **[导出说明](./EXPORT_DRAWIO.md)** 了解更多详情。
+
+</details>
+
 ## 3. 关键 API 设计
 
-### 🌐 在线预览方式
+### 🌐 在线预览方式 GitHub Pages 在线访问：
 
-#### 方式 1：Swagger UI 在线查看（推荐）✨
-
-点击下方链接在 Swagger Editor 中查看可交互的 API 文档：
-
-[![Open in Swagger Editor](https://img.shields.io/badge/Open%20in-Swagger%20Editor-85EA2D?style=for-the-badge&logo=swagger&logoColor=white)](https://editor.swagger.io/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json)
-
-> 🚀 **优势**：可交互的 API 文档，支持在线测试、参数说明、响应示例等
-
-#### 方式 2：其他在线工具
-
-- **Redoc**: [![Open in Redoc](https://img.shields.io/badge/Open%20in-Redoc-8A2BE2?style=flat-square&logo=redoc)](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json) - 更美观的文档展示
-- **Stoplight**: [![Open in Stoplight](https://img.shields.io/badge/Open%20in-Stoplight-00D4AA?style=flat-square)](https://stoplight.io/p/docs/gh/jeffzhou12/mini-etl) - 专业的 API 设计平台
-
-#### 方式 3：GitHub 原生 JSON 预览
-
-查看 **[etl_openapi.json](./etl_openapi.json)** - GitHub 会自动格式化显示 JSON 内容
+[![View on GitHub Pages](https://img.shields.io/badge/Swagger%20UI-GitHub%20Pages-blue?style=for-the-badge&logo=github)](https://jeffzhou12.github.io/mini-etl/swagger-ui.html)
 
 ### 📄 说明
 
 定义了 ETL 平台的核心 API 接口，包括数据源管理、任务配置、脚本执行等关键操作。
+
 
 ## 4. C# 分层架构草案（API / Service / Engine / Script Sandbox）
 
