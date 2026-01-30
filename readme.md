@@ -26,6 +26,11 @@
 | 任务 | ETLJob | Name | string | 是 | 任务名称 |
 | 任务 | ETLJob | Schedule | string(Cron) | 否 | 执行频率（Cron 表达式） |
 | 任务 | ETLJob | ManualTrigger | bool | 否 | 是否支持手动触发 |
+| 任务 | ETLJob | DataSourceId | Guid | 是 | 关联上游数据源ID |
+| 任务 | ETLJob | TargetSinkId | Guid | 是 | 关联下游目标ID |
+| 任务 | ETLJob | ScriptId | Guid | 否 | 关联清洗脚本ID（可选） |
+| 任务 | ETLJob | FieldMappings | json/array | 否 | 字段映射列表（或引用映射配置ID） |
+| 任务 | ETLJob | DSL | json | 是 | 任务执行内容，这里会关联上下游配置，脚本配置，字段映射等 |
 | 脚本 | TransformScript | Id | Guid | 是 | 脚本唯一标识 |
 | 脚本 | TransformScript | Language | enum(ScriptLanguage) | 是 | 脚本语言：Python/JS/C#/Java |
 | 脚本 | TransformScript | Content | string | 是 | 脚本内容 |
@@ -65,11 +70,24 @@ hediet.vscode-drawio
 
 ## 3. 关键 API 设计
 
-### 🌐 在线预览（OpenAPI JSON）
+### 🌐 在线预览方式
 
-查看 **[etl_openapi.json](./etl_openapi.json)** ✅ GitHub 原生支持在线预览
+#### 方式 1：Swagger UI 在线查看（推荐）✨
 
-> 💡 **提示**：点击链接后，GitHub 会自动格式化显示 JSON 内容，支持语法高亮和折叠。
+点击下方链接在 Swagger Editor 中查看可交互的 API 文档：
+
+[![Open in Swagger Editor](https://img.shields.io/badge/Open%20in-Swagger%20Editor-85EA2D?style=for-the-badge&logo=swagger&logoColor=white)](https://editor.swagger.io/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json)
+
+> 🚀 **优势**：可交互的 API 文档，支持在线测试、参数说明、响应示例等
+
+#### 方式 2：其他在线工具
+
+- **Redoc**: [![Open in Redoc](https://img.shields.io/badge/Open%20in-Redoc-8A2BE2?style=flat-square&logo=redoc)](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json) - 更美观的文档展示
+- **Stoplight**: [![Open in Stoplight](https://img.shields.io/badge/Open%20in-Stoplight-00D4AA?style=flat-square)](https://stoplight.io/p/docs/gh/jeffzhou12/mini-etl) - 专业的 API 设计平台
+
+#### 方式 3：GitHub 原生 JSON 预览
+
+查看 **[etl_openapi.json](./etl_openapi.json)** - GitHub 会自动格式化显示 JSON 内容
 
 ### 📄 说明
 

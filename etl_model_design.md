@@ -17,6 +17,11 @@
 | 任务 | ETLJob | Name | string | 是 | 任务名称 |
 | 任务 | ETLJob | Schedule | string(Cron) | 否 | 执行频率（Cron 表达式） |
 | 任务 | ETLJob | ManualTrigger | bool | 否 | 是否支持手动触发 |
+| 任务 | ETLJob | DataSourceId | Guid | 是 | 关联上游数据源ID |
+| 任务 | ETLJob | TargetSinkId | Guid | 是 | 关联下游目标ID |
+| 任务 | ETLJob | ScriptId | Guid | 否 | 关联清洗脚本ID（可选） |
+| 任务 | ETLJob | FieldMappings | json/array | 否 | 字段映射列表（或引用映射配置ID） |
+| 任务 | ETLJob | DSL | json | 是 | 任务执行内容，这里会关联上下游配置，脚本配置，字段映射等 |
 | 脚本 | TransformScript | Id | Guid | 是 | 脚本唯一标识 |
 | 脚本 | TransformScript | Language | enum(ScriptLanguage) | 是 | 脚本语言：Python/JS/C#/Java |
 | 脚本 | TransformScript | Content | string | 是 | 脚本内容 |
