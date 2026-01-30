@@ -162,11 +162,15 @@ hediet.vscode-drawio
 
 **Swagger Editor**（推荐 - 可交互）：
 
-[![Open in Swagger Editor](https://img.shields.io/badge/Swagger%20Editor-85EA2D?style=for-the-badge&logo=swagger&logoColor=white)](https://editor.swagger.io/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json)
+<a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json" target="_blank">
+  <img src="https://img.shields.io/badge/Swagger%20Editor-85EA2D?style=for-the-badge&logo=swagger&logoColor=white" alt="Open in Swagger Editor">
+</a>
 
 **Redoc**（美观的文档展示）：
 
-[![Open in Redoc](https://img.shields.io/badge/Redoc-8A2BE2?style=for-the-badge&logo=redoc)](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json)
+<a href="https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/jeffzhou12/mini-etl/main/etl_openapi.json" target="_blank">
+  <img src="https://img.shields.io/badge/Redoc-8A2BE2?style=for-the-badge&logo=redoc" alt="Open in Redoc">
+</a>
 
 
 
