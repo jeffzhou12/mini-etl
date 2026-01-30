@@ -110,6 +110,44 @@
 </tbody>
 </table>
 
+#### 📊 执行记录模型 (JobExecutionLog)
+
+<table border="1" cellpadding="8" cellspacing="0">
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Id</td><td>Guid</td><td>是</td><td>执行记录唯一标识</td></tr>
+<tr><td>JobId</td><td>Guid</td><td>是</td><td>关联的ETL任务ID</td></tr>
+<tr><td>JobName</td><td>string</td><td>是</td><td>任务名称快照（用于展示）</td></tr>
+<tr><td>TriggerType</td><td>enum(TriggerType)</td><td>是</td><td>触发方式：Scheduled(定时)/Manual(手动)/API(接口调用)</td></tr>
+<tr><td>Status</td><td>enum(ExecutionStatus)</td><td>是</td><td>执行状态：Pending(待执行)/Running(执行中)/Success(成功)/Failed(失败)/Cancelled(已取消)</td></tr>
+<tr><td>StartTime</td><td>DateTime</td><td>是</td><td>开始执行时间</td></tr>
+<tr><td>EndTime</td><td>DateTime?</td><td>否</td><td>结束时间（执行中时为空）</td></tr>
+<tr><td>Duration</td><td>long</td><td>否</td><td>执行耗时（毫秒）</td></tr>
+<tr><td>CurrentStage</td><td>enum(ExecutionStage)</td><td>否</td><td>当前阶段：Extract(采集)/Transform(转换)/Load(写入)/Complete(完成)</td></tr>
+<tr><td>Progress</td><td>int</td><td>否</td><td>执行进度百分比（0-100）</td></tr>
+<tr><td>SourceRecordCount</td><td>int</td><td>否</td><td>源数据记录数</td></tr>
+<tr><td>ProcessedCount</td><td>int</td><td>否</td><td>已处理记录数</td></tr>
+<tr><td>SuccessCount</td><td>int</td><td>否</td><td>成功写入记录数</td></tr>
+<tr><td>FailedCount</td><td>int</td><td>否</td><td>失败记录数</td></tr>
+<tr><td>SkippedCount</td><td>int</td><td>否</td><td>跳过记录数（如数据过滤）</td></tr>
+<tr><td>ErrorMessage</td><td>string</td><td>否</td><td>错误信息（失败时记录）</td></tr>
+<tr><td>ErrorStackTrace</td><td>text</td><td>否</td><td>异常堆栈信息</td></tr>
+<tr><td>ExecutionDetails</td><td>json</td><td>否</td><td>详细执行信息（各阶段耗时、中间结果等）</td></tr>
+<tr><td>TriggeredBy</td><td>string</td><td>否</td><td>触发人/系统标识</td></tr>
+<tr><td>ServerHost</td><td>string</td><td>否</td><td>执行服务器地址</td></tr>
+<tr><td>CreatedAt</td><td>DateTime</td><td>是</td><td>记录创建时间</td></tr>
+<tr><td>UpdatedAt</td><td>DateTime</td><td>是</td><td>记录最后更新时间</td></tr>
+</tbody>
+</table>
+
+
 </details>
 
 ### 📥 原始文件
